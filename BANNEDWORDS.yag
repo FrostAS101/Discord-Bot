@@ -1,0 +1,29 @@
+{{/* Regrex command with banned words type to send a log to Server.Team specific channel (with id) */}}
+
+{{ $slice := cslice 
+    "word1"
+    "word1"
+    "word1"
+}}
+
+
+{{ $message := .Message.Content }}
+{{ $channel := .Channel.Mention }}
+{{ $nick := toString (userArg (.User.ID)).Globalname }}
+{{ $id := .User.ID }}
+
+{{ $pattern := joinStr "|" $slice  }}
+{{ $found := reFindAll $pattern $message }}
+
+{{ if $found }}
+
+    {{/* Get the first found word */}}
+    {{ $word := index $found 0 }}
+
+    {{/* later we'll improve this  */}}
+    {{ $log := joinStr (
+    print "Banned Word Sent / Command Launched: " "word:- " $word " user: " $nick " $user_id: " $id
+    )}}
+    {{ sendMessageNoEscape (1278115945516241018) ($log) }}
+
+{{ end }} 
